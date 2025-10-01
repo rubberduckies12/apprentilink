@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
 import NavigationBar from "./NavigationBar";
+import Footer from './Footer';
 
 export default function Layout({ children }: { children: React.ReactNode }){
     //loading animation
@@ -19,6 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }){
         <div className="min-h-screen bg-white">
             <NavigationBar />
             {children}
+            <Footer />
         </div>
     )
 }

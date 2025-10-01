@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+a[target="_blank"] {
+  color: rgb(79 70 229);
+}
+a[target="_blank"]:hover {
+  text-decoration: underline;
+}
