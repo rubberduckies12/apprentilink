@@ -5,6 +5,7 @@ import { ArrowRightIcon, UserGroupIcon, BriefcaseIcon, AcademicCapIcon } from '@
 import { motion, Variants } from 'framer-motion';
 import Loading from '@/components/Loading';
 import {fadeInUp, fadeInLeft, fadeInRight, scaleIn, snapIn, staggerContainer} from "@/lib/framer-motion-animation";
+import StandardMotionBox from '@/components/StandardMotionBox';
 
 
 const Home = () => {
@@ -76,13 +77,7 @@ const Home = () => {
       {/* Features Section */}
       <section className="py-24 bg-gray-50">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-center mb-20"
-          >
+          <StandardMotionBox className="text-center mb-20">
             <h2 className="text-base font-semibold text-indigo-600 mb-4">What We Do</h2>
             <h3 className="text-4xl font-bold text-gray-900 mb-6">
               Connecting Talent with Excellence
@@ -91,7 +86,7 @@ const Home = () => {
               We specialize in matching exceptional apprenticeship candidates with leading companies 
               who value talent, ambition, and technical excellence.
             </p>
-          </motion.div>
+          </StandardMotionBox>
           
           <motion.div 
             initial="hidden"

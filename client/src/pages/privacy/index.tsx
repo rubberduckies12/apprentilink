@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { EnvelopeIcon } from '@heroicons/react/24/solid';
 import { motion, Variants } from 'framer-motion';
 import {fadeInUp, fadeInLeft, fadeInRight, scaleIn, snapIn, staggerContainer} from "@/lib/framer-motion-animation";
+import StandardMotionBox from '@/components/StandardMotionBox';
+import { ST } from 'next/dist/shared/lib/utils';
 
 
 const Privacy = () =>
@@ -55,14 +57,7 @@ const Privacy = () =>
           FAQs
         </h3>
         <div className="mx-auto max-w-auto px-6 lg:px-18">
-          <motion.div
-            id = "which-sources-and-what-personal-data-do-we-use" 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          > 
+          <StandardMotionBox id = "which-sources-and-what-personal-data-do-we-use" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               Which sources and what Personal Data do we use?
             </h2>
@@ -87,15 +82,8 @@ const Privacy = () =>
               <br/>
               In the case that you are hired, the personal data you have provided in your candidate profile (directly or indirectly) will be transferred to your employer.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "purposes-of-the-processing-of-personal-data" 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "purposes-of-the-processing-of-personal-data" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               What are the purposes of the processing of your Personal Data?
             </h2>
@@ -120,15 +108,8 @@ const Privacy = () =>
             <br/>
             We will use your personal information for the above Purposes only, unless we reasonably consider that we need to use it for another reason and that reason is compatible with the original purpose (for preserving particular evidence under the applicable Data Protection Laws and Regulations, or in the context of legal statutes of limitation for example). If we need to use your Personal Data for an unrelated purpose, we will notify you prior this further Personal Data processing and provide you the relevant privacy information notice. 
             </p>
-          </motion.div>
-          <motion.div 
-            id = "legal-basis-for-the-processing-of-personal-data" 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "legal-basis-for-the-processing-of-personal-data" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               What is the legal basis for the processing of your Personal Data?
             </h2>
@@ -152,45 +133,24 @@ const Privacy = () =>
               </ul>
             <br/>
             </p>
-          </motion.div>
-          <motion.div 
-            id = "how-long-will-personal-data-be-stored" 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "how-long-will-personal-data-be-stored" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               How long will your personal data be stored?
             </h2>
             <p className="text-l text-gray-600 mx-auto">
               We process and store your Personal Data for at least 12 months from the date of collection in accordance with the GDPR or any local data protection laws requirements or as long as it is required to meet our contractual and statutory obligations. In case of inactivity your Personal Data will be deleted after 12 months from your last interaction.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "security-of-personal-data"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "security-of-personal-data" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               What about the security of your Personal Data?
             </h2>
             <p className="text-l text-gray-600 mx-auto">
               We use technical and organisational security measures in order to protect the Personal Data we have under our control against accidental or intentional manipulation, loss, destruction and against access by unauthorised persons. Our security procedures are continually enhanced as new technology becomes available.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "rights"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "rights" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               What are your rights?
             </h2>
@@ -207,15 +167,8 @@ const Privacy = () =>
               </ul>
             <br/>
             </p>
-          </motion.div>
-          <motion.div 
-            id = "how-to-exercise-your-rights"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "how-to-exercise-your-rights" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               How to exercise your rights and/or contact ApprentiLink in respect of your Personal Data?
             </h2>
@@ -230,37 +183,23 @@ const Privacy = () =>
               <br/><br/>
               In case of doubt of your identity, we may ask you to justify it by enclosing a copy of any identity document.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "automated-decision-making"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "automated-decision-making" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               Are your Personal Data the basis for automated decision-making, including profiling?
             </h2>
             <p className="text-l text-gray-600 mx-auto">
               As a matter of principle, we do not use fully automated decision-making processes, including profiling. In the event that we should use such processes, we will if prescribed by law, specifically inform you in advance of this and your rights in this respect.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "assistance-from-competent-authorities"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "assistance-from-competent-authorities" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
               How to ask for assistance from the competent authorities?
             </h2>
             <p className="text-l text-gray-600 mx-auto">
               If you remain unsatisfied, then you have the right to apply directly to a Data Protection Supervisory Authority. In the UK, this is the <a href="https://ico.org.uk/" target="_blank">ICO: Supervisory Authority UK.</a>
             </p>
-          </motion.div>
+          </StandardMotionBox>
         </div>
       </section>
       {/*Cookies Policy*/}
@@ -269,14 +208,7 @@ const Privacy = () =>
           Cookies Policy
         </h3>
         <div className="mx-auto max-w-auto px-6 lg:px-18">
-          <motion.div
-            id = "what-are-cookies" 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          <StandardMotionBox id="what-are-cookies" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
                 What are cookies?
             </h2>
@@ -285,15 +217,8 @@ const Privacy = () =>
               <br/>
               Only the cookie on your device is identified.
             </p>
-          </motion.div>
-          <motion.div 
-            id = "what-cookies-do-we-use"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={fadeInUp}
-            className="text-left mb-20"
-          >
+          </StandardMotionBox>
+          <StandardMotionBox id = "what-cookies-do-we-use" className="text-left mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-black">
                 What cookies do we use?
             </h2>
@@ -324,7 +249,7 @@ const Privacy = () =>
             <p className="text-l text-gray-600 mx-auto">
               Some cookies are strictly necessary for technical reasons. 
             </p>
-          </motion.div>
+          </StandardMotionBox>
         </div>
       </section>
       {/*Modification of the Privacy Notice*/}
