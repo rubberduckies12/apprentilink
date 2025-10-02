@@ -33,7 +33,7 @@ const Privacy = () =>
       <section>
       </section>
       {/* Introduction */}
-      <section className="py-10 bg-white">
+      <section className="py-10 bg-white" id = "introduction">
         <div className="mx-auto max-w-auto px-6 lg:px-8">
           <div className="text-left mb-20">
             <h3 className="text-4xl font-bold text-gray-900 mb-6 text-indigo-600 text-center">
@@ -50,12 +50,13 @@ const Privacy = () =>
         </div>
       </section>
       {/* FAQs */}
-      <section className="py-10 bg-white">
+      <section className="py-10 bg-white" id = "faqs">
         <h3 className="text-4xl font-bold text-gray-900 mb-6 text-indigo-600 text-center">
           FAQs
         </h3>
         <div className="mx-auto max-w-auto px-6 lg:px-18">
-          <motion.div 
+          <motion.div
+            id = "which-sources-and-what-personal-data-do-we-use" 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -88,6 +89,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "purposes-of-the-processing-of-personal-data" 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -120,6 +122,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "legal-basis-for-the-processing-of-personal-data" 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -135,8 +138,7 @@ const Privacy = () =>
               The legal basis for processing your Personal Data under this Privacy Notice are:
               <ul className="list-disc pl-6">
                 <li><b>To comply with contractual obligations.</b> When you create your profile in the ApprentiLink website, the purposes of processing your Personal Data are primarily determined by that service and we will process your information so that we can provide that service to you.</li>
-                <li><b>As a result of your consent.</b> When you have consented to the processing of your Personal Data by us for certain services through Airbus External Recruitment Website, you can withdraw consent. For further information on the right of withdrawal, please see below Sections “What are your rights?" and "How to exercise your rights and/or contact ApprentiLink in respect of your Personal Data?"</li>
-                TODO add links to sections (above)
+                <li><b>As a result of your consent.</b> When you have consented to the processing of your Personal Data by us for certain services through Airbus External Recruitment Website, you can withdraw consent. For further information on the right of withdrawal, please see below Sections <Link href="#rights">“What are your rights?"</Link> and <Link href="#how-to-exercise-your-rights">"How to exercise your rights and/or contact ApprentiLink in respect of your Personal Data?"</Link></li>
                 <li><b>Within the scope of legitimate interest.</b> On occasion taking into account the minimum privacy impact for you, the processing of your personal data might be necessary for the following legitimate interest:
                   <ul className="list-disc pl-6">
                     <li>for Compliance with foreign law, law enforcement, court and regulatory bodies’ requirements</li>
@@ -152,6 +154,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "how-long-will-personal-data-be-stored" 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -166,6 +169,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "security-of-personal-data"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -180,6 +184,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "rights"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -198,13 +203,13 @@ const Privacy = () =>
                 <li><b>Right to restrict the processing of your Personal Data: </b>You have the right to restrict the processing of your Personal Data, for instance when the processing is unlawful and you oppose the erasure of your Personal Data. In such cases, your Personal Data will only be processed with your consent or for the exercise or defense of legal claims.</li>
                 <li><b>Right to data portability: </b>You have the right to receive the Personal Data concerning you in a structured, commonly used and machine-readable format and/or transmit those Personal Data to another data controller.</li>
                 <li><b>Right to object: </b>In some cases required by law, you may ask us to stop processing your Personal Data.</li>
-                <li><b>Right to withdraw consent: </b>Where your consent is required, you may at any time withdraw such consent by contacting us at the contact details in section “How to exercise your rights and/or contact ApprentiLink in respect of your Personal  Data?”. However, please note that if you withdraw your consent, you may not be able to access and use certain information, features or services as described in section “Are you obliged to provide your Personal Data?”.</li>
-                TODO add link to section mentioned above
+                <li><b>Right to withdraw consent: </b>Where your consent is required, you may at any time withdraw such consent by contacting us at the contact details in section <Link href="#how-to-exercise-your-rights">“How to exercise your rights and/or contact ApprentiLink in respect of your Personal  Data?”</Link>. However, please note that if you withdraw your consent, you may not be able to access and use certain information, features or services as described in section “Are you obliged to provide your Personal Data?”.</li>
               </ul>
             <br/>
             </p>
           </motion.div>
           <motion.div 
+            id = "how-to-exercise-your-rights"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -227,6 +232,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "automated-decision-making"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -241,6 +247,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "assistance-from-competent-authorities"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -257,12 +264,13 @@ const Privacy = () =>
         </div>
       </section>
       {/*Cookies Policy*/}
-      <section className="py-10 bg-white">
+      <section className="py-10 bg-white" id = "cookies-policy">
         <h3 className="text-4xl font-bold text-gray-900 mb-6 text-indigo-600 text-center">
           Cookies Policy
         </h3>
         <div className="mx-auto max-w-auto px-6 lg:px-18">
-          <motion.div 
+          <motion.div
+            id = "what-are-cookies" 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -279,6 +287,7 @@ const Privacy = () =>
             </p>
           </motion.div>
           <motion.div 
+            id = "what-cookies-do-we-use"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -319,7 +328,7 @@ const Privacy = () =>
         </div>
       </section>
       {/*Modification of the Privacy Notice*/}
-      <section className="py-10 bg-white">
+      <section className="py-10 bg-white" id = "modification-of-the-privacy-notice">
         <h3 className="text-4xl font-bold text-gray-900 mb-6 text-indigo-600 text-center">
           Modification of the Privacy Notice
         </h3>
