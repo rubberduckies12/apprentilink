@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import errorHandler from "./src/middleware/error_handler.js";
+import userRoutes from "./src/routes/user.route.js";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ app.use(cors);
 app.use(errorHandler);
 
 // Routes
-// TODO
+app.use("/api", userRoutes);
 
 // Run server
 app.listen(port, () => {
