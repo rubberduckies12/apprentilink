@@ -1,0 +1,77 @@
+// Standard response handler
+import {
+    createUserService,
+    deleteUserService,
+    getAllUsersService,
+    getUserByIdService,
+    updateUserService
+} from "../db/models/user.model.js";
+
+const handleResponse = (res, status, message, data=null) => {
+    res.status(status).json({
+        status,
+        message,
+        data
+    });
+};
+
+export const createUser = async (req, res, next) => {
+    const {firstName, lastName, email} = req.body;
+    try {
+        const newUser = await createUserService(firstName, lastName, email);
+        handleResponse(res, 201, "User created successfully.", newUser);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await getAllUsersService();
+        handleResponse(res, 200, "Users fetched successfully.", users);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const getUserById = async (req, res, next) => {
+    try {
+        const id = req.params.id; // Get ID from query parameters
+        const user = await getUserByIdService(id);
+        if (!user)
+            handleResponse(res, 404, "User not found.");
+        else handleResponse(res, 200, "User fetched successfully.", user);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const updateUser = async (req, res, next) => {
+    try {
+        const {firstName, lastName, email} = req.body;
+        const id = req.params.id;
+        const user = await updateUserService(id, firstName, lastName, email);
+        if (!user)
+            handleResponse(res, 404, "User not found.");
+        else handleResponse(res, 200, "User updated successfully.", user);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const user = await deleteUserService(id);
+        if (!user)
+            handleResponse(res, 404, "User not found.");
+        else handleResponse(res, 200, "User fetched successfully.", user);
+    }
+    catch (err) {
+        next(err);
+    }
+}
