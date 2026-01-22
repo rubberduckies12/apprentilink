@@ -1,0 +1,78 @@
+CREATE TYPE user_types AS ENUM ('ADMIN', 'COMPANY', 'CANDIDATE');
+CREATE TYPE education_levels AS ENUM ('GCSE', 'A_LEVEL', 'UNIVERSITY', 'OTHER');
+
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    user_type user_types NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    profile_description TEXT,
+    postcode VARCHAR(20),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS candidate_preferences (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A user may have 1 preferences object linked to it. When the user is deleted, their preferences will be.
+    industry VARCHAR(255),
+    distance_km INTEGER,
+    preferred_role VARCHAR(255),
+    start_date TIMESTAMP WITH TIME ZONE,
+    apprenticeship_level INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- One candidate can have Many education and skill entries
+CREATE TABLE IF NOT EXISTS education (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    education_level education_levels NOT NULL,
+    subjects VARCHAR(1000) NOT NULL, -- User can write whatever they like about their subjects here (including grades if they want)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS skills (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    skill_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS company_info (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    industry VARCHAR(255),
+    contact_email VARCHAR(255) NOT NULL,
+    contact_phone VARCHAR(255),
+    logo_url VARCHAR(1000),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS jobs (
+    id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES company_info(id) ON DELETE CASCADE,
+    job_title VARCHAR(255) NOT NULL,
+    postcode VARCHAR(20) NOT NULL,
+    description TEXT NOT NULL,
+    salary INTEGER, -- May be null if company does not wish to disclose salary
+    start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
+    apprenticeship_level INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS users_interested (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    company_interested BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, job_id)
+);
