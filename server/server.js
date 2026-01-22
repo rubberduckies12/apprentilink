@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import errorHandler from "./src/middleware/error_handler.js";
 import userRoutes from "./src/routes/user.route.js";
+import initializeDatabase from './src/db/config/db.config.js';
 
 dotenv.config();
 
@@ -20,6 +21,11 @@ app.use(errorHandler);
 app.use("/api", userRoutes);
 
 // Run server
-app.listen(port, () => {
-   console.log(`Server running on port ${port}`);
-});
+async function startServer() {
+   await initializeDatabase();
+   app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+   });
+}
+
+startServer();
