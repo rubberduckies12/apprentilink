@@ -1,15 +1,26 @@
 import pkg from "pg";
 const { Pool } = pkg;
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import dotenv from "dotenv";
 
-const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const options = {
+    host: String(process.env.DB_HOST),
     port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-});
+    database: String(process.env.DB_NAME),
+    user: String(process.env.DB_USER),
+    password: String(process.env.DB_PASSWORD),
+};
+console.log(options);
+
+const pool = new Pool(options);
 
 pool.on("connect", () => {
     console.log("Connection established with Database.");
@@ -21,32 +32,18 @@ pool.on("error", (err) => {
     process.exit(-1);
 });
 
-process.on('SIGINT', async () => {
-    console.log('\nGracefully shutting down database connections...');
-    await pool.end();
-    process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-    console.log('\nGracefully shutting down database connections...');
-    await pool.end();
-    process.exit(0);
-});
-
-async function initializeDatabase() {
+export async function initializeDatabase() {
     try {
         console.log("Initializing database...");
-        const client = await pool.connect();
         const schemaPath = path.join(__dirname, '../schema/schema.sql');
 
         if (fs.existsSync(schemaPath)) {
             const schema = fs.readFileSync(schemaPath, 'utf8');
-            await client.query(schema);
+            await pool.query(schema);
             console.log('Database schema initialized successfully');
         } else {
             console.error('Schema file not found at:', schemaPath);
         }
-        client.release();
     } catch (err) {
         console.error('Error initializing database schema:', err);
     } finally {
@@ -54,4 +51,4 @@ async function initializeDatabase() {
     }
 }
 
-module.exports = {pool, initializeDatabase};
+export default pool;

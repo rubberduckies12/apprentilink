@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import errorHandler from "./src/middleware/error_handler.js";
 import userRoutes from "./src/routes/user.route.js";
-import initializeDatabase from './src/db/config/db.config.js';
+import { initializeDatabase } from './src/db/config/db.config.js';
+import pool from './src/db/config/db.config.js';
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ const port = process.env.PORT || 3001; // get from .env, or default to 3001
 
 // Middleware
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 
 // Error handling
 app.use(errorHandler);
@@ -22,10 +23,16 @@ app.use("/api", userRoutes);
 
 // Run server
 async function startServer() {
-   await initializeDatabase();
-   app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-   });
+   try {
+      await initializeDatabase();
+      app.listen(port, () => {
+         console.log(`Server running on port ${port}`);
+      });
+   }
+   catch (err) {
+      console.error("Failed to start server: ", err);
+      process.exit(1);
+   }
 }
 
 startServer();
