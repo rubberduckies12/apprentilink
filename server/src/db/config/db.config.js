@@ -33,22 +33,29 @@ pool.on("error", (err) => {
 });
 
 export async function initializeDatabase() {
-    try {
-        console.log("Initializing database...");
-        const schemaPath = path.join(__dirname, '../schema/schema.sql');
+    console.log("Initializing database...");
+    const schemaPath = path.join(__dirname, '../schema/schema.sql');
 
-        if (fs.existsSync(schemaPath)) {
-            const schema = fs.readFileSync(schemaPath, 'utf8');
-            await pool.query(schema);
-            console.log('Database schema initialized successfully');
-        } else {
-            console.error('Schema file not found at:', schemaPath);
-        }
-    } catch (err) {
-        console.error('Error initializing database schema:', err);
-    } finally {
-        await pool.end();
+    if (fs.existsSync(schemaPath)) {
+        const schema = fs.readFileSync(schemaPath, 'utf8');
+        await pool.query(schema);
+        console.log('Database schema initialized successfully');
+    } else {
+        console.error('Schema file not found at:', schemaPath);
     }
 }
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('\nGracefully shutting down database connections...');
+    await pool.end();
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    console.log('\nGracefully shutting down database connections...');
+    await pool.end();
+    process.exit(0);
+});
 
 export default pool;
