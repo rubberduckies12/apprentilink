@@ -1,4 +1,3 @@
-// Standard response handler
 import {
     createUserService,
     deleteUserService,
@@ -7,14 +6,7 @@ import {
     updateUserService,
     changePasswordService
 } from "../db/models/user.model.js";
-
-const handleResponse = (res, status, message, data=null) => {
-    res.status(status).json({
-        status,
-        message,
-        data
-    });
-};
+import handleResponse from "./response_handler.js";
 
 export const createUser = async (req, res, next) => {
     const {username, email, password, profile_description, postcode} = req.body;

@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import errorHandler from "./src/middleware/error_handler.js";
 import userRoutes from "./src/routes/user.route.js";
+import candidatePreferencesRoutes from './src/routes/candidate_preferences.route.js';
 import { initializeDatabase } from './src/db/config/db.config.js';
 import pool from './src/db/config/db.config.js';
 
@@ -20,6 +21,7 @@ app.use(errorHandler);
 
 // Routes
 app.use("/api", userRoutes);
+app.use("/api", candidatePreferencesRoutes);
 
 // Run server
 async function startServer() {
