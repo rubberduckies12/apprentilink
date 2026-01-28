@@ -18,30 +18,51 @@ const options = {
     user: String(process.env.DB_USER),
     password: String(process.env.DB_PASSWORD),
 };
-console.log(options);
 
 const pool = new Pool(options);
 
-pool.on("connect", () => {
-    console.log("Connection established with Database.");
-});
-
 // Error handling
 pool.on("error", (err) => {
-    console.error("Unexpected error with database", err);
+    console.error("Unexpected error with database! ", err);
     process.exit(-1);
 });
 
 export async function initializeDatabase() {
-    console.log("Initializing database...");
-    const schemaPath = path.join(__dirname, '../schema/schema.sql');
+    try {
+        console.log("Initializing database...");
+        const schemaPath = path.join(__dirname, '../schema/schema.sql');
 
-    if (fs.existsSync(schemaPath)) {
-        const schema = fs.readFileSync(schemaPath, 'utf8');
-        await pool.query(schema);
-        console.log('Database schema initialized successfully');
-    } else {
-        console.error('Schema file not found at:', schemaPath);
+        if (fs.existsSync(schemaPath)) {
+            const schema = fs.readFileSync(schemaPath, 'utf8');
+            await pool.query(schema);
+            console.log('Database schema initialized successfully');
+
+            // If this is a development environment, insert test data
+            if (process.env.NODE_ENV === 'development') {
+                try {
+                    const testDataPath = path.join(__dirname, '../schema/test_data.sql');
+
+                    if (fs.existsSync(testDataPath)) {
+                        const testData = fs.readFileSync(testDataPath, 'utf8');
+                        await pool.query(testData);
+                        console.log('Test data inserted successfully');
+                    } else {
+                        console.error('Test data file not found at:', testDataPath);
+                    }
+                }
+                catch (err) {
+                    console.error("Failed to insert test data. Database will be empty.");
+                }
+            }
+        } else {
+            console.error('Schema file not found at:', schemaPath);
+            await pool.end();
+        }
+    }
+    catch (err) {
+        console.error("Error initializing database!");
+        await pool.end();
+        throw err;
     }
 }
 
