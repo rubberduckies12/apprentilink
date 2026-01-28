@@ -16,9 +16,9 @@ const handleResponse = (res, status, message, data=null) => {
 };
 
 export const createUser = async (req, res, next) => {
-    const {firstName, lastName, email} = req.body;
+    const {username, email, password, profile_description, postcode} = req.body;
     try {
-        const newUser = await createUserService(firstName, lastName, email);
+        const newUser = await createUserService(username, email, password, profile_description, postcode);
         handleResponse(res, 201, "User created successfully.", newUser);
     }
     catch (err) {
@@ -51,9 +51,9 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const {firstName, lastName, email} = req.body;
+        const {username, email, password, profile_description, postcode} = req.body;
         const id = req.params.id;
-        const user = await updateUserService(id, firstName, lastName, email);
+        const user = await updateUserService(id, username, email, password, profile_description, postcode);
         if (!user)
             handleResponse(res, 404, "User not found.");
         else handleResponse(res, 200, "User updated successfully.", user);
