@@ -20,9 +20,10 @@ export const createUserService = async (username, email, password, profile_desc 
     return result.rows[0];
 };
 
-export const updateUserService = async (id, username, email, password_hash, profile_desc, postcode) => {
-    const result = await pool.query("UPDATE users SET username=$1, email=$2, password_hash=$3, profile_description=$4, postcode=$5 WHERE id=$6 RETURNING *",
-        [username, email, password_hash, profile_desc, postcode, id]);
+// Do not allow passwords to be changed using this endpoint - must use secure endpoint
+export const updateUserService = async (id, username, email, profile_desc, postcode) => {
+    const result = await pool.query("UPDATE users SET username=$1, email=$2, profile_description=$3, postcode=$4 WHERE id=$5 RETURNING *",
+        [username, email, profile_desc, postcode, id]);
     return result.rows[0];
 };
 
@@ -31,6 +32,27 @@ export const deleteUserService = async (id) => {
         [id]);
     return result.rows[0];
 };
+
+export const changePasswordService = async (id, currentPassword, newPassword, confirmNewPassword) => {
+    if (newPassword !== confirmNewPassword)
+        throw new Error("New password inputs do not match.");
+
+    const user = await getUserByIdService(id);
+    if (!user)
+        return null;
+
+    const currentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!currentPasswordValid)
+        throw new Error("Current password is incorrect.");
+
+    const newPasswordHash = await hashPassword(newPassword);
+    const result = await pool.query("UPDATE users SET password_hash=$1 WHERE id=$2 RETURNING *",
+        [newPasswordHash, id]);
+
+    // Existing user sessions should be invalidated here
+
+    return result.rows[0];
+}
 
 async function hashPassword(password) {
     const saltRounds = 10;

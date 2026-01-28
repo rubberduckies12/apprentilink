@@ -4,7 +4,8 @@ import {
     deleteUserService,
     getAllUsersService,
     getUserByIdService,
-    updateUserService
+    updateUserService,
+    changePasswordService
 } from "../db/models/user.model.js";
 
 const handleResponse = (res, status, message, data=null) => {
@@ -51,9 +52,9 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const {username, email, password, profile_description, postcode} = req.body;
+        const {username, email, profile_description, postcode} = req.body;
         const id = req.params.id;
-        const user = await updateUserService(id, username, email, password, profile_description, postcode);
+        const user = await updateUserService(id, username, email, profile_description, postcode);
         if (!user)
             handleResponse(res, 404, "User not found.");
         else handleResponse(res, 200, "User updated successfully.", user);
@@ -65,11 +66,31 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
         const user = await deleteUserService(id);
         if (!user)
             handleResponse(res, 404, "User not found.");
-        else handleResponse(res, 200, "User fetched successfully.", user);
+        else handleResponse(res, 200, "User deleted successfully.", user);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const changePassword = async (req, res, next) => {
+    try {
+        const { currentPassword, newPassword, confirmNewPassword } = req.body;
+        const id = req.params.id;
+
+        try {
+            const newUser = await changePasswordService(id, currentPassword, newPassword, confirmNewPassword);
+            if (!newUser)
+                handleResponse(res, 404, "User not found.");
+            else handleResponse(res, 200, "Password changed successfully.", newUser);
+        }
+        catch (err) {
+            handleResponse(res, 400, err.message);
+        }
     }
     catch (err) {
         next(err);
