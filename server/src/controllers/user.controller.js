@@ -9,9 +9,9 @@ import {
 import handleResponse from "./response_handler.js";
 
 export const createUser = async (req, res, next) => {
-    const {username, email, password, profile_description, postcode} = req.body;
+    const {user_type, username, email, password, profile_description, postcode} = req.body;
     try {
-        const newUser = await createUserService(username, email, password, profile_description, postcode);
+        const newUser = await createUserService(user_type, username, email, password, profile_description, postcode);
         handleResponse(res, 201, "User created successfully.", newUser);
     }
     catch (err) {
@@ -71,11 +71,11 @@ export const deleteUser = async (req, res, next) => {
 
 export const changePassword = async (req, res, next) => {
     try {
-        const { currentPassword, newPassword, confirmNewPassword } = req.body;
+        const { current_password, new_password, confirm_new_password } = req.body;
         const id = req.params.id;
 
         try {
-            const newUser = await changePasswordService(id, currentPassword, newPassword, confirmNewPassword);
+            const newUser = await changePasswordService(id, current_password, new_password, confirm_new_password);
             if (!newUser)
                 handleResponse(res, 404, "User not found.");
             else handleResponse(res, 200, "Password changed successfully.", newUser);

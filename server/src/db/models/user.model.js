@@ -12,15 +12,16 @@ export const getUserByIdService = async (id) => {
 };
 
 // Profile description and Postcode are optional when creating an account
-export const createUserService = async (username, email, password, profile_desc = null, postcode = null) => {
+export const createUserService = async (user_type, username, email, password, profile_desc = null, postcode = null) => {
     const password_hash = await hashPassword(password);
 
-    const result = await pool.query("INSERT INTO users (username, email, password_hash, profile_description, postcode) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [username, email, password_hash, profile_desc, postcode]);
+    const result = await pool.query("INSERT INTO users (user_type, username, email, password_hash, profile_description, postcode) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [user_type, username, email, password_hash, profile_desc, postcode]);
     return result.rows[0];
 };
 
 // Do not allow passwords to be changed using this endpoint - must use secure endpoint
+// Also disallow changing of User Type
 export const updateUserService = async (id, username, email, profile_desc, postcode) => {
     const result = await pool.query("UPDATE users SET username=$1, email=$2, profile_description=$3, postcode=$4 WHERE id=$5 RETURNING *",
         [username, email, profile_desc, postcode, id]);
@@ -41,9 +42,14 @@ export const changePasswordService = async (id, currentPassword, newPassword, co
     if (!user)
         return null;
 
-    const currentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+    const currentPasswordHash = user.password_hash;
+    const currentPasswordValid = await bcrypt.compare(currentPassword, currentPasswordHash);
     if (!currentPasswordValid)
         throw new Error("Current password is incorrect.");
+
+    const newPasswordSame = await bcrypt.compare(newPassword, currentPasswordHash);
+    if (newPasswordSame)
+        throw new Error("New password cannot be the same as old password.");
 
     const newPasswordHash = await hashPassword(newPassword);
     const result = await pool.query("UPDATE users SET password_hash=$1 WHERE id=$2 RETURNING *",
