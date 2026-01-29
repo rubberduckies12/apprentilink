@@ -63,10 +63,24 @@ export const updateUser = async (req, res, next) => {
     try {
         const {username, email, profile_description, postcode} = req.body;
         const id = req.params.id;
-        const user = await updateUserService(id, username, email, profile_description, postcode);
+        const user = await getUserByIdService(id);
         if (!user)
             handleResponse(res, 404, "User not found.");
-        else handleResponse(res, 200, "User updated successfully.", user);
+        else {
+            if (!username || !email) {
+                handleResponse(res, 400, "Username and Email address are required.");
+                return;
+            }
+            if (email !== user.email) { // If the email address has changed, validate it
+                const existingUser = await getUserByEmailService(email);
+                if (existingUser) {
+                    handleResponse(res, 400, "A user with this email address already exists.");
+                    return;
+                }
+            }
+            const updatedUser = await updateUserService(id, username, email, profile_description, postcode);
+            handleResponse(res, 200, "User updated successfully.", updatedUser);
+        }
     }
     catch (err) {
         next(err);
