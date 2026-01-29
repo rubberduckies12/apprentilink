@@ -2,13 +2,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const errorHandler = (err, req, res, next) => {
-    if (process.env.NODE_ENV === 'development')
+    const statusCode = err.statusCode || 500; // Thrown errors should have a status code attached
+
+    // Log unexpected error stacks to the console, if in development
+    if (process.env.NODE_ENV === 'development' && !statusCode)
         console.log(err.stack);
 
-    res.status(500).json({
-        status: 500,
-        message: "Internal Server Error",
-        error: err.message
+    res.status(statusCode).json({
+        status: statusCode,
+        message: err.message
     });
 };
 

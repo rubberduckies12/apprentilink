@@ -16,12 +16,12 @@ const port = process.env.PORT || 3001; // get from .env, or default to 3001
 app.use(express.json());
 app.use(cors());
 
-// Error handling
-app.use(errorHandler);
-
 // Routes
 app.use("/api", userRoutes);
 app.use("/api", candidatePreferencesRoutes);
+
+// Error handling
+app.use(errorHandler);
 
 // Run server
 async function startServer() {

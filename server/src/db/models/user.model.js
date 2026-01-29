@@ -26,7 +26,7 @@ export const createUserService = async (user_type, username, email, password, pr
     if (!email.includes('@'))
         throw new AppError(400, "Email address is not formatted correctly.");
 
-    if (!validatePostcode(postcode))
+    if (postcode && !validatePostcode(postcode))
         throw new AppError(400, "Post Code is not formatted correctly.");
 
     const password_hash = await hashPassword(password);

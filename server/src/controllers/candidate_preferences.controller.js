@@ -9,14 +9,9 @@ export const createCandidatePreferences = async (req, res, next) => {
     try {
         const userId = req.params.userId;
         const {industry, distance_km, preferred_role, start_date, apprenticeship_level} = req.body;
-        const user = await getUserByIdService(userId);
-        if (!user)
-            handleResponse(res, 404, "User not found.");
-        else {
-            const newPreferences = await createCandidatePreferencesService(userId, industry, distance_km, preferred_role, start_date, apprenticeship_level);
-            handleResponse(res, 201, "Candidate Preferences created successfully.", newPreferences);
-        }
 
+        const newPreferences = await createCandidatePreferencesService(userId, industry, distance_km, preferred_role, start_date, apprenticeship_level);
+        handleResponse(res, 201, "Candidate Preferences created successfully.", newPreferences);
     }
     catch (err) {
         next(err);

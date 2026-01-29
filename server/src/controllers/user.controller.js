@@ -33,8 +33,6 @@ export const createUser = async (req, res, next) => {
         handleResponse(res, 201, "User created successfully.", newUser);
     }
     catch (err) {
-        if (err.statusCode === 400)
-            handleResponse(res, 400, err.message);
         next(err);
     }
 }
@@ -78,8 +76,6 @@ export const updateUser = async (req, res, next) => {
         else handleResponse(res, 200, "User updated successfully.", user);
     }
     catch (err) {
-        if (err.statusCode === 400)
-            handleResponse(res, 400, err.message);
         next(err);
     }
 }
@@ -117,9 +113,6 @@ export const changePassword = async (req, res, next) => {
         else handleResponse(res, 200, "Password changed successfully.", newUser);
     }
     catch (err) {
-        // If error is expected, send a 400 response to the client
-        if (err.statusCode === 400)
-            handleResponse(res, 400, err.message);
-        else next(err); // Otherwise use middleware (code 500)
+        next(err);
     }
 }
