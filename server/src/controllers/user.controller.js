@@ -4,18 +4,35 @@ import {
     getAllUsersService,
     getUserByIdService,
     updateUserService,
-    changePasswordService
+    changePasswordService, getUserByEmailService
 } from "../db/models/user.model.js";
 import handleResponse from "./response_handler.js";
 
 export const createUser = async (req, res, next) => {
     const {user_type, username, email, password, profile_description, postcode} = req.body;
-    try {
-        const newUser = await createUserService(user_type, username, email, password, profile_description, postcode);
-        handleResponse(res, 201, "User created successfully.", newUser);
-    }
-    catch (err) {
-        next(err);
+
+    if (!user_type)
+        handleResponse(res, 400, "User Type is required.");
+    else if (!username)
+        handleResponse(res, 400, "Username is required.");
+    else if (!email)
+        handleResponse(res, 400, "Email address is required.");
+    else if (!password)
+        handleResponse(res, 400, "Password is required.");
+
+    const existingUser = await getUserByEmailService(email);
+    if (existingUser)
+        handleResponse(res, 400, "A user with this email address already exists.");
+    else {
+        try {
+            const newUser = await createUserService(user_type, username, email, password, profile_description, postcode);
+            handleResponse(res, 201, "User created successfully.", newUser);
+        }
+        catch (err) {
+            if (err.statusCode === 400)
+                handleResponse(res, 400, err.message);
+            next(err);
+        }
     }
 }
 

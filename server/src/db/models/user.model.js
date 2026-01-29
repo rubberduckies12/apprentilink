@@ -11,6 +11,11 @@ export const getUserByIdService = async (id) => {
     return result.rows[0];
 };
 
+export const getUserByEmailService = async (email) => {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    return result.rows[0];
+}
+
 // Profile description and Postcode are optional when creating an account
 export const createUserService = async (user_type, username, email, password, profile_desc = null, postcode = null) => {
     const password_hash = await hashPassword(password);
