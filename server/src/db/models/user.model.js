@@ -44,8 +44,8 @@ export const updateUserService = async (id, username, email, profile_desc, postc
         return null;
 
     if (email !== user.email) { // If the email address has changed, validate it
-        const existingUser = await getUserByEmailService(email);
-        if (existingUser)
+        const userWithEmail = await getUserByEmailService(email);
+        if (userWithEmail)
             throw new AppError( 400, "A user with this email address already exists.");
 
         if (!email.includes('@'))
