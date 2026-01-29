@@ -1,7 +1,6 @@
 import pool from "../../db/config/db.config.js";
 import {getUserByIdService} from "./user.model.js";
 import {AppError} from "../../middleware/error_handler.js";
-import handleResponse from "../../controllers/response_handler.js";
 
 
 export const createCandidatePreferencesService = async (userId, industry, distance_km, preferred_role, start_date, apprenticeship_level) => {
@@ -38,7 +37,7 @@ export const updateCandidatePreferencesService = async (userId, industry, distan
     if (!preferences)
         return null;
 
-    const result = await pool.query("UPDATE candidate_preferences SET industry=$1, distance_km=$2, preferred_role=$3, start_date=$4, apprenticeship_level=$5 WHERE user_id=$6 RETURNING *",
+    const result = await pool.query("UPDATE candidate_preferences SET industry=$1, distance_km=$2, preferred_role=$3, start_date=$4, apprenticeship_level=$5, updated_at=CURRENT_TIMESTAMP WHERE user_id=$6 RETURNING *",
         [industry, distance_km, preferred_role, start_date, apprenticeship_level, userId]);
     return result.rows[0];
 };

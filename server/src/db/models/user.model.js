@@ -55,7 +55,7 @@ export const updateUserService = async (id, username, email, profile_desc, postc
     if (postcode !== user.postcode && !validatePostcode(postcode))
         throw new AppError(400, "Post Code is not formatted correctly.");
 
-    const result = await pool.query("UPDATE users SET username=$1, email=$2, profile_description=$3, postcode=$4 WHERE id=$5 RETURNING *",
+    const result = await pool.query("UPDATE users SET username=$1, email=$2, profile_description=$3, postcode=$4, updated_at=CURRENT_TIMESTAMP WHERE id=$5 RETURNING *",
         [username, email, profile_desc, postcode, id]);
     return result.rows[0];
 };
@@ -84,7 +84,7 @@ export const changePasswordService = async (id, currentPassword, newPassword, co
         throw new AppError(400, "New password cannot be the same as old password.");
 
     const newPasswordHash = await hashPassword(newPassword);
-    const result = await pool.query("UPDATE users SET password_hash=$1 WHERE id=$2 RETURNING *",
+    const result = await pool.query("UPDATE users SET password_hash=$1, updated_at=CURRENT_TIMESTAMP WHERE id=$2 RETURNING *",
         [newPasswordHash, id]);
 
     // Existing user sessions should be invalidated here
