@@ -7,26 +7,19 @@ import {
     changePasswordService, getUserByEmailService
 } from "../db/models/user.model.js";
 import handleResponse from "./response_handler.js";
+import {AppError} from "../middleware/error_handler.js";
 
 export const createUser = async (req, res, next) => {
     const {user_type, username, email, password, profile_description, postcode} = req.body;
 
-    if (!user_type) {
-        handleResponse(res, 400, "User Type is required.");
-        return;
-    }
-    else if (!username) {
-        handleResponse(res, 400, "Username is required.");
-        return;
-    }
-    else if (!email) {
-        handleResponse(res, 400, "Email address is required.");
-        return;
-    }
-    else if (!password) {
-        handleResponse(res, 400, "Password is required.");
-        return;
-    }
+    if (!user_type)
+        throw new AppError(400, "User Type is required.");
+    else if (!username)
+        throw new AppError(400, "Username is required.");
+    else if (!email)
+        throw new AppError(400, "Email address is required.");
+    else if (!password)
+        throw new AppError(400, "Password is required.");
 
     try {
         const newUser = await createUserService(user_type, username, email, password, profile_description, postcode);
@@ -52,7 +45,7 @@ export const getUserById = async (req, res, next) => {
         const id = req.params.id; // Get ID from query parameters
         const user = await getUserByIdService(id);
         if (!user)
-            handleResponse(res, 404, "User not found.");
+            throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "User fetched successfully.", user);
     }
     catch (err) {
@@ -65,14 +58,12 @@ export const updateUser = async (req, res, next) => {
         const {username, email, profile_description, postcode} = req.body;
         const id = req.params.id;
 
-        if (!username || !email) {
-            handleResponse(res, 400, "Username and Email address are required.");
-            return;
-        }
+        if (!username || !email)
+            throw new AppError(400, "Username and Email address are required.");
 
         const user = await updateUserService(id, username, email, profile_description, postcode);
         if (!user)
-            handleResponse(res, 404, "User not found.");
+            throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "User updated successfully.", user);
     }
     catch (err) {
@@ -85,7 +76,7 @@ export const deleteUser = async (req, res, next) => {
         const id = req.params.id;
         const user = await deleteUserService(id);
         if (!user)
-            handleResponse(res, 404, "User not found.");
+            throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "User deleted successfully.", user);
     }
     catch (err) {
@@ -98,18 +89,14 @@ export const changePassword = async (req, res, next) => {
         const { current_password, new_password, confirm_new_password } = req.body;
         const id = req.params.id;
 
-        if (!current_password) {
-            handleResponse(res, 400, "Current Password is required.");
-            return;
-        }
-        else if (!new_password) {
-            handleResponse(res, 400, "New Password is required.");
-            return;
-        }
+        if (!current_password)
+            throw new AppError(400, "Current Password is required.");
+        else if (!new_password)
+            throw new AppError(400, "New Password is required.");
 
         const newUser = await changePasswordService(id, current_password, new_password, confirm_new_password);
         if (!newUser)
-            handleResponse(res, 404, "User not found.");
+            throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "Password changed successfully.", newUser);
     }
     catch (err) {
