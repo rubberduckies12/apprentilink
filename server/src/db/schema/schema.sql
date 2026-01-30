@@ -6,10 +6,8 @@ DROP TABLE IF EXISTS company_info CASCADE;
 DROP TABLE IF EXISTS jobs CASCADE;
 DROP TABLE IF EXISTS users_interested CASCADE;
 DROP TYPE IF EXISTS user_types;
-DROP TYPE IF EXISTS education_levels;
 
 CREATE TYPE user_types AS ENUM ('ADMIN', 'COMPANY', 'CANDIDATE');
-CREATE TYPE education_levels AS ENUM ('GCSE', 'A_LEVEL', 'UNIVERSITY', 'OTHER');
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -17,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    profile_description TEXT,
+    profile_description TEXT, -- For candidates this could contain their LinkedIn, GitHub etc. For companies, it could contain their website link
     postcode VARCHAR(20),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -39,8 +37,8 @@ CREATE TABLE IF NOT EXISTS candidate_preferences (
 CREATE TABLE IF NOT EXISTS education (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    education_level education_levels NOT NULL,
-    subjects VARCHAR(1000) NOT NULL, -- User can write whatever they like about their subjects here (including grades if they want)
+    education_level VARCHAR(255) NOT NULL, -- e.g. GCSE, A-Level, BTEC
+    subjects TEXT NOT NULL, -- User can write whatever they like about their subjects here (including grades if they want)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -59,7 +57,7 @@ CREATE TABLE IF NOT EXISTS company_info (
     industry VARCHAR(255),
     contact_email VARCHAR(255) NOT NULL,
     contact_phone VARCHAR(255),
-    logo_url VARCHAR(1000),
+    logo_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -71,8 +69,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     postcode VARCHAR(20) NOT NULL,
     description TEXT NOT NULL,
     salary INTEGER, -- May be null if company does not wish to disclose salary
-    start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
     apprenticeship_level INTEGER,
+    start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
+    closed_at TIMESTAMP WITH TIME ZONE DEFAULT NULL, -- null until the company manually closes the listing. Then the listing remains in the DB for users to reference, but can no longer be signed up for
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,7 +80,7 @@ CREATE TABLE IF NOT EXISTS users_interested (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
-    company_interested BOOLEAN DEFAULT FALSE,
+    shortlisted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, job_id)
