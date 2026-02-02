@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import errorHandler from "./src/middleware/error_handler.js";
 import userRoutes from "./src/routes/user.route.js";
 import candidatePreferencesRoutes from './src/routes/candidate_preferences.route.js';
+import educationRoutes from "./src/routes/education.route.js";
 import { initializeDatabase } from './src/db/config/db.config.js';
 import pool from './src/db/config/db.config.js';
 
@@ -19,6 +20,7 @@ app.use(cors());
 // Routes
 app.use("/api", userRoutes);
 app.use("/api", candidatePreferencesRoutes);
+app.use("/api", educationRoutes);
 
 // Error handling
 app.use(errorHandler);
