@@ -6,6 +6,8 @@ export const createEducationService = async (userId, education_level, subjects) 
     const user = await getUserByIdService(userId);
     if (!user)
         throw new AppError(404, "User not found.");
+    else if (user.user_type !== 'CANDIDATE')
+        throw new AppError(400, "Only Candidates can have education.");
 
     const result = await pool.query("INSERT INTO education (user_id, education_level, subjects) VALUES ($1, $2, $3) RETURNING *",
         [userId, education_level, subjects]);
@@ -17,7 +19,7 @@ export const getAllEducationForUserIdService = async (userId) => {
     if (!user)
         throw new AppError(404, "User not found.");
 
-    const result = await pool.query("SELECT * FROM education WHERE user_id=$1", [userId]);
+    const result = await pool.query("SELECT * FROM education WHERE user_id=$1 ORDER BY id", [userId]);
     return result.rows;
 };
 
