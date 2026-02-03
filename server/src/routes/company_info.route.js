@@ -1,4 +1,10 @@
 import express from "express"
+import {
+    createCompanyInfo,
+    deleteCompanyInfo,
+    getCompanyInfo,
+    updateCompanyInfo
+} from "../controllers/company_info.controller.js";
 
 
 const router = express.Router();
