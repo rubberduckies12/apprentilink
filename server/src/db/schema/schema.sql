@@ -2,9 +2,12 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS candidate_preferences CASCADE;
 DROP TABLE IF EXISTS education CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
+DROP TABLE IF EXISTS user_skills CASCADE;
+DROP TABLE IF EXISTS job_skills CASCADE;
 DROP TABLE IF EXISTS company_info CASCADE;
 DROP TABLE IF EXISTS jobs CASCADE;
 DROP TABLE IF EXISTS users_interested CASCADE;
+DROP TABLE IF EXISTS app_stats CASCADE;
 DROP TYPE IF EXISTS user_types;
 
 CREATE TYPE user_types AS ENUM ('ADMIN', 'COMPANY', 'CANDIDATE');
@@ -38,7 +41,8 @@ CREATE TABLE IF NOT EXISTS education (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     education_level VARCHAR(255) NOT NULL, -- e.g. GCSE, A-Level, BTEC
-    subjects TEXT NOT NULL, -- User can write whatever they like about their subjects here (including grades if they want)
+    subjects VARCHAR(255)[] NOT NULL, -- e.g. Maths, English, Physics
+    details TEXT, -- User can talk about their subjects here (including grades etc.)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -50,12 +54,22 @@ CREATE TABLE IF NOT EXISTS skills (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Candidates can showcase their skills on their profile
 CREATE TABLE IF NOT EXISTS user_skills (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, skill_id)
+);
+
+-- Jobs can have 'ideal skills' for users to filter by (and for recommendations)
+CREATE TABLE IF NOT EXISTS job_skills (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(job_id, skill_id)
 );
 
 CREATE TABLE IF NOT EXISTS company_info (
@@ -77,8 +91,10 @@ CREATE TABLE IF NOT EXISTS jobs (
     description TEXT NOT NULL,
     salary INTEGER, -- May be null if company does not wish to disclose salary
     apprenticeship_level INTEGER,
+    desired_education_level VARCHAR(255),
+    desired_subjects VARCHAR(255)[],
     start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
-    match_message TEXT, -- Message shown to candidates who are shortlisted
+    match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -93,4 +109,15 @@ CREATE TABLE IF NOT EXISTS users_interested (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, job_id)
+);
+
+-- Store stats for 'all time' as well as the current year (Could be expanded later to document every year)
+CREATE TABLE IF NOT EXISTS app_stats (
+    user_count_all_time INTEGER DEFAULT 0,
+    user_count_candidates INTEGER DEFAULT 0,
+    user_count_companies INTEGER DEFAULT 0,
+    matches_made_all_time INTEGER DEFAULT 0,
+    matches_made INTEGER DEFAULT 0,
+    jobs_posted_all_time INTEGER DEFAULT 0,
+    jobs_posted INTEGER DEFAULT 0
 );
