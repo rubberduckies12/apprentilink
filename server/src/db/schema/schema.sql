@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS candidate_preferences (
     preferred_role VARCHAR(255),
     start_date TIMESTAMP WITH TIME ZONE,
     apprenticeship_level INTEGER,
-    skills VARCHAR(255)[], -- List of skill strings (enum enforced on front-end) - Not technically a preference but this is candidate-specific data
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,6 +41,21 @@ CREATE TABLE IF NOT EXISTS education (
     subjects TEXT NOT NULL, -- User can write whatever they like about their subjects here (including grades if they want)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- List of skills which users can choose from to say that they have that skill
+CREATE TABLE IF NOT EXISTS skills (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_skills (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, skill_id)
 );
 
 CREATE TABLE IF NOT EXISTS company_info (
