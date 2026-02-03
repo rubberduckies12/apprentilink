@@ -63,15 +63,6 @@ CREATE TABLE IF NOT EXISTS user_skills (
     UNIQUE(user_id, skill_id)
 );
 
--- Jobs can have 'ideal skills' for users to filter by (and for recommendations)
-CREATE TABLE IF NOT EXISTS job_skills (
-    id SERIAL PRIMARY KEY,
-    job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
-    skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(job_id, skill_id)
-);
-
 CREATE TABLE IF NOT EXISTS company_info (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -97,6 +88,15 @@ CREATE TABLE IF NOT EXISTS jobs (
     match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Jobs can have 'ideal skills' for users to filter by (and for recommendations)
+CREATE TABLE IF NOT EXISTS job_skills (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(job_id, skill_id)
 );
 
 CREATE TABLE IF NOT EXISTS users_interested (

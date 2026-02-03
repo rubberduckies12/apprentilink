@@ -3,7 +3,7 @@ import {getUserByIdService} from "./user.model.js";
 import {AppError} from "../../middleware/error_handler.js";
 
 
-export const createCandidatePreferencesService = async (userId, industry, distance_km, preferred_role, start_date, apprenticeship_level, skills) => {
+export const createCandidatePreferencesService = async (userId, industry, distance_km, preferred_role, start_date, apprenticeship_level) => {
     const user = await getUserByIdService(userId);
     if (!user)
         return null;
@@ -14,8 +14,8 @@ export const createCandidatePreferencesService = async (userId, industry, distan
     if (existingPreferences)
         throw new AppError(400, "User already has Candidate Preferences. Cannot create.");
 
-    const result = await pool.query("INSERT INTO candidate_preferences (user_id, industry, distance_km, preferred_role, start_date, apprenticeship_level, skills) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-        [userId, industry, distance_km, preferred_role, start_date, apprenticeship_level, skills]);
+    const result = await pool.query("INSERT INTO candidate_preferences (user_id, industry, distance_km, preferred_role, start_date, apprenticeship_level) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [userId, industry, distance_km, preferred_role, start_date, apprenticeship_level]);
     return result.rows[0];
 };
 
@@ -28,7 +28,7 @@ export const getCandidatePreferencesByUserIdService = async (userId) => {
     return result.rows[0];
 };
 
-export const updateCandidatePreferencesService = async (userId, industry, distance_km, preferred_role, start_date, apprenticeship_level, skills) => {
+export const updateCandidatePreferencesService = async (userId, industry, distance_km, preferred_role, start_date, apprenticeship_level) => {
     const user = await getUserByIdService(userId);
     if (!user)
         throw new AppError(404, "User not found.");
@@ -37,8 +37,8 @@ export const updateCandidatePreferencesService = async (userId, industry, distan
     if (!preferences)
         return null;
 
-    const result = await pool.query("UPDATE candidate_preferences SET industry=$1, distance_km=$2, preferred_role=$3, start_date=$4, apprenticeship_level=$5, skills=$6, updated_at=CURRENT_TIMESTAMP WHERE user_id=$7 RETURNING *",
-        [industry, distance_km, preferred_role, start_date, apprenticeship_level, skills, userId]);
+    const result = await pool.query("UPDATE candidate_preferences SET industry=$1, distance_km=$2, preferred_role=$3, start_date=$4, apprenticeship_level=$5, updated_at=CURRENT_TIMESTAMP WHERE user_id=$7 RETURNING *",
+        [industry, distance_km, preferred_role, start_date, apprenticeship_level, userId]);
     return result.rows[0];
 };
 
