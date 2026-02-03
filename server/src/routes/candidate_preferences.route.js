@@ -10,9 +10,9 @@ import {
 const router = express.Router();
 
 // CRUD API endpoints for Candidate Preferences objects
-router.post("/user/:userId/preferences", createCandidatePreferences);
-router.get("/user/:userId/preferences", getCandidatePreferences);
-router.put("/user/:userId/preferences", updateCandidatePreferences);
-router.delete("/user/:userId/preferences", deleteCandidatePreferences);
+router.post("/candidate/:userId", createCandidatePreferences);
+router.get("/candidate/:userId", getCandidatePreferences);
+router.put("/candidate/:userId", updateCandidatePreferences);
+router.delete("/candidate/:userId", deleteCandidatePreferences);
 
 export default router;

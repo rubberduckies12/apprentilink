@@ -3,7 +3,6 @@ import {
     createCandidatePreferencesService, deleteCandidatePreferencesService,
     getCandidatePreferencesByUserIdService, updateCandidatePreferencesService
 } from "../db/models/candidate_preferences.model.js";
-import {getUserByIdService} from "../db/models/user.model.js";
 import {AppError} from "../middleware/error_handler.js";
 
 export const createCandidatePreferences = async (req, res, next) => {
