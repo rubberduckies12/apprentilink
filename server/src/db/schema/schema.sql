@@ -1,9 +1,13 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS candidate_preferences CASCADE;
 DROP TABLE IF EXISTS education CASCADE;
+DROP TABLE IF EXISTS employment CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
 DROP TABLE IF EXISTS user_skills CASCADE;
 DROP TABLE IF EXISTS job_skills CASCADE;
+DROP TABLE IF EXISTS subjects CASCADE;
+DROP TABLE IF EXISTS user_subjects CASCADE;
+DROP TABLE IF EXISTS job_subjects CASCADE;
 DROP TABLE IF EXISTS company_info CASCADE;
 DROP TABLE IF EXISTS jobs CASCADE;
 DROP TABLE IF EXISTS users_interested CASCADE;
@@ -15,18 +19,21 @@ CREATE TYPE user_types AS ENUM ('ADMIN', 'COMPANY', 'CANDIDATE');
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     user_type user_types NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    profile_description TEXT, -- For candidates this could contain their LinkedIn, GitHub etc. For companies, it could contain their website link
+    profile_description TEXT, -- 'About' page for a user. For candidates this could contain their LinkedIn, GitHub etc. For companies, it could contain their website link
     postcode VARCHAR(20),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    -- TODO - Add GDPR Compliance fields for user personal data (separate table perhaps)
 );
 
+-- This table is used for automatically recommending jobs to candidates. All of these features can also be used on the front-end to manually search and filter.
 CREATE TABLE IF NOT EXISTS candidate_preferences (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A user may have 1 preferences object linked to it. When the user is deleted, their preferences will be.
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A candidate has one of these objects linked to it. When the user is deleted, their preferences will be.
     industry VARCHAR(255),
     distance_km INTEGER,
     preferred_role VARCHAR(255),
@@ -41,8 +48,20 @@ CREATE TABLE IF NOT EXISTS education (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     education_level VARCHAR(255) NOT NULL, -- e.g. GCSE, A-Level, BTEC
-    subjects VARCHAR(255)[] NOT NULL, -- e.g. Maths, English, Physics
     details TEXT, -- User can talk about their subjects here (including grades etc.)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS employment (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    job_title VARCHAR(255) NOT NULL,
+    company VARCHAR(255) NOT NULL,
+    postcode VARCHAR(20) NOT NULL,
+    description TEXT NOT NULL,
+    date_started TIMESTAMP WITH TIME ZONE NOT NULL,
+    date_finished TIMESTAMP WITH TIME ZONE, -- Can be null if the candidate is still working this role
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,13 +73,26 @@ CREATE TABLE IF NOT EXISTS skills (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Candidates can showcase their skills on their profile
 CREATE TABLE IF NOT EXISTS user_skills (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS subjects (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_subjects (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, subject_id)
 );
 
 CREATE TABLE IF NOT EXISTS company_info (
@@ -90,13 +122,21 @@ CREATE TABLE IF NOT EXISTS jobs (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Jobs can have 'ideal skills' for users to filter by (and for recommendations)
+-- Jobs can have 'ideal skills' and 'ideal education subjects' to recommend to users with a matching profile
 CREATE TABLE IF NOT EXISTS job_skills (
     id SERIAL PRIMARY KEY,
     job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
     skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(job_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS job_subjects (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(job_id, subject_id)
 );
 
 CREATE TABLE IF NOT EXISTS users_interested (
