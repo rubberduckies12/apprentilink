@@ -4,25 +4,25 @@ import {
     getAllUsersService,
     getUserByIdService,
     updateUserService,
-    changePasswordService, getUserByEmailService
+    changePasswordService
 } from "../db/models/user.model.js";
 import handleResponse from "./response_handler.js";
 import {AppError} from "../middleware/error_handler.js";
 
 export const createUser = async (req, res, next) => {
-    const {user_type, username, email, password, profile_description, postcode} = req.body;
+    const {user_type, first_name, last_name, email, password, profile_description, postcode} = req.body;
 
     if (!user_type)
         throw new AppError(400, "User Type is required.");
-    else if (!username)
-        throw new AppError(400, "Username is required.");
+    else if (!first_name || !last_name)
+        throw new AppError(400, "First name and Surname are required.");
     else if (!email)
         throw new AppError(400, "Email address is required.");
     else if (!password)
         throw new AppError(400, "Password is required.");
 
     try {
-        const newUser = await createUserService(user_type, username, email, password, profile_description, postcode);
+        const newUser = await createUserService(user_type, first_name, last_name, email, password, profile_description, postcode);
         handleResponse(res, 201, "User created successfully.", newUser);
     }
     catch (err) {
@@ -55,13 +55,15 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const {username, email, profile_description, postcode} = req.body;
+        const {first_name, last_name, email, profile_description, postcode} = req.body;
         const id = req.params.id;
 
-        if (!username || !email)
-            throw new AppError(400, "Username and Email address are required.");
+        if (!first_name || !last_name)
+            throw new AppError(400, "First name and Surname are required.");
+        if (!email)
+            throw new AppError(400, "Email address is required.");
 
-        const user = await updateUserService(id, username, email, profile_description, postcode);
+        const user = await updateUserService(id, first_name, last_name, email, profile_description, postcode);
         if (!user)
             throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "User updated successfully.", user);
