@@ -1,4 +1,4 @@
-import handleResponse from "./response_handler.js";
+import handleResponse from "../utils/response_handler.js";
 import {
     createCandidatePreferencesService, deleteCandidatePreferencesService,
     getCandidatePreferencesByUserIdService, updateCandidatePreferencesService

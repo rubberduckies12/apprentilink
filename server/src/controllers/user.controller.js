@@ -6,7 +6,7 @@ import {
     updateUserService,
     changePasswordService
 } from "../db/models/user.model.js";
-import handleResponse from "./response_handler.js";
+import handleResponse from "../utils/response_handler.js";
 import {AppError} from "../middleware/error_handler.js";
 
 export const createUser = async (req, res, next) => {
