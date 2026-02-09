@@ -10,7 +10,7 @@ import handleResponse from "../utils/response_handler.js";
 import {AppError} from "../middleware/error_handler.js";
 
 export const createUser = async (req, res, next) => {
-    const {user_type, first_name, last_name, email, password, profile_description, postcode} = req.body;
+    const {user_type, first_name, last_name, email, password, profile_description} = req.body;
 
     if (!user_type)
         throw new AppError(400, "User Type is required.");
@@ -22,7 +22,7 @@ export const createUser = async (req, res, next) => {
         throw new AppError(400, "Password is required.");
 
     try {
-        const newUser = await createUserService(user_type, first_name, last_name, email, password, profile_description, postcode);
+        const newUser = await createUserService(user_type, first_name, last_name, email, password, profile_description);
         handleResponse(res, 201, "User created successfully.", newUser);
     }
     catch (err) {
@@ -55,7 +55,7 @@ export const getUserById = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-        const {first_name, last_name, email, profile_description, postcode} = req.body;
+        const {first_name, last_name, email, profile_description} = req.body;
         const id = req.params.id;
 
         if (!first_name || !last_name)
@@ -63,7 +63,7 @@ export const updateUser = async (req, res, next) => {
         if (!email)
             throw new AppError(400, "Email address is required.");
 
-        const user = await updateUserService(id, first_name, last_name, email, profile_description, postcode);
+        const user = await updateUserService(id, first_name, last_name, email, profile_description);
         if (!user)
             throw new AppError(404, "User not found.");
         else handleResponse(res, 200, "User updated successfully.", user);
