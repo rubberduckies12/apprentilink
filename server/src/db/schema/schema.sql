@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS candidate_preferences CASCADE;
-DROP TABLE IF EXISTS education CASCADE;
 DROP TABLE IF EXISTS employment CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
 DROP TABLE IF EXISTS user_skills CASCADE;
@@ -24,7 +23,6 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     profile_description TEXT, -- 'About' page for a user. For candidates this could contain their LinkedIn, GitHub etc. For companies, it could contain their website link
-    postcode VARCHAR(20),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     -- TODO - Add GDPR Compliance fields for user personal data (separate table perhaps)
@@ -35,20 +33,11 @@ CREATE TABLE IF NOT EXISTS candidate_preferences (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A candidate has one of these objects linked to it. When the user is deleted, their preferences will be.
     industry VARCHAR(255),
-    distance_km INTEGER,
+    postcode VARCHAR(20),
+    distance_km INTEGER, -- Max distance from the user's postcode that will be recommended
     preferred_role VARCHAR(255),
     start_date TIMESTAMP WITH TIME ZONE,
     apprenticeship_level INTEGER,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- One candidate can have Many education and skill entries
-CREATE TABLE IF NOT EXISTS education (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    education_level VARCHAR(255) NOT NULL, -- e.g. GCSE, A-Level, BTEC
-    details TEXT, -- User can talk about their subjects here (including grades etc.)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -91,6 +80,8 @@ CREATE TABLE IF NOT EXISTS user_subjects (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    education_level VARCHAR(255) NOT NULL,
+    details TEXT NOT NULL, -- Details provided by the candidate such as grades and topics learned
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, subject_id)
 );

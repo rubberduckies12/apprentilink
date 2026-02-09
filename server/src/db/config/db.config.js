@@ -51,6 +51,7 @@ export async function initializeDatabase() {
                     }
                 }
                 catch (err) {
+                    console.error(err.stack);
                     console.error("Failed to insert test data. Database will be empty.");
                 }
             }
