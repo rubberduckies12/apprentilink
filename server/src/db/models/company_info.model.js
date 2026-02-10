@@ -19,6 +19,11 @@ export const createCompanyInfoService = async (userId, industry, contact_email, 
     return result.rows[0];
 };
 
+export const getCompanyInfoByIdService = async (id) => {
+    const result = await pool.query("SELECT * FROM company_info WHERE id = $1", [id]);
+    return result.rows[0];
+};
+
 export const getCompanyInfoByUserIdService = async (userId) => {
     const user = await getUserByIdService(userId);
     if (!user)

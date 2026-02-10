@@ -106,7 +106,6 @@ CREATE TABLE IF NOT EXISTS jobs (
     salary INTEGER, -- May be null if company does not wish to disclose salary
     apprenticeship_level INTEGER,
     desired_education_level VARCHAR(255),
-    desired_subjects VARCHAR(255)[],
     start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
     match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

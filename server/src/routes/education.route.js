@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// CRUD API endpoints for Candidate Preferences objects (using User IDs because they are One-to-One with user accounts)
+// TODO - Once schema is finalised, change to use new subjects matching system
 router.post("/candidate/:userId/education", addUserEducation);
 router.get("/candidate/:userId/education", getUserEducation);
 router.put("/candidate/:userId/education/:educationId", updateUserEducation);
