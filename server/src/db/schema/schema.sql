@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS job_subjects CASCADE;
 DROP TABLE IF EXISTS company_info CASCADE;
 DROP TABLE IF EXISTS jobs CASCADE;
 DROP TABLE IF EXISTS users_interested CASCADE;
+DROP TABLE IF EXISTS match_records CASCADE;
 DROP TABLE IF EXISTS app_stats CASCADE;
 DROP TYPE IF EXISTS user_types;
 
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS candidate_preferences (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A candidate has one of these objects linked to it. When the user is deleted, their preferences will be.
-    industry VARCHAR(255),
+    preferred_industry VARCHAR(255),
+    preferred_field VARCHAR(255),
     postcode VARCHAR(20),
     distance_km INTEGER, -- Max distance from the user's postcode that will be recommended
     preferred_role VARCHAR(255),
@@ -89,7 +91,7 @@ CREATE TABLE IF NOT EXISTS user_subjects (
 CREATE TABLE IF NOT EXISTS company_info (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    industry VARCHAR(255),
+    industry VARCHAR(255), -- Defence, Aerospace etc.
     contact_email VARCHAR(255) NOT NULL,
     contact_phone VARCHAR(255),
     logo_url TEXT,
@@ -100,14 +102,17 @@ CREATE TABLE IF NOT EXISTS company_info (
 CREATE TABLE IF NOT EXISTS jobs (
     id SERIAL PRIMARY KEY,
     company_id INTEGER NOT NULL REFERENCES company_info(id) ON DELETE CASCADE,
-    job_title VARCHAR(255) NOT NULL,
+    job_title TEXT NOT NULL,
     postcode VARCHAR(20) NOT NULL,
     description TEXT NOT NULL,
     salary INTEGER, -- May be null if company does not wish to disclose salary
+    field VARCHAR(255), -- Type of work (Mechanical, Electrical, Software etc.)
     apprenticeship_level INTEGER,
     desired_education_level VARCHAR(255),
     start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
     match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
+    close_message TEXT, -- Message shown to candidates who are interested but not shortlisted when the posting is closed
+    closed BOOLEAN,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -139,6 +144,17 @@ CREATE TABLE IF NOT EXISTS users_interested (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, job_id)
+);
+
+-- For GDPR - We must keep 1 year of records for matches made between users and companies.
+-- Having a separate table means 'job' and 'users_interested' objects can be deleted but the match records maintained
+CREATE TABLE IF NOT EXISTS match_records (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    company_id INTEGER NOT NULL REFERENCES company_info(id) ON DELETE CASCADE,
+    job_title TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, company_id, job_title)
 );
 
 -- Store stats for 'all time' as well as the current year (Could be expanded later to document every year)
