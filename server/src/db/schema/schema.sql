@@ -111,8 +111,7 @@ CREATE TABLE IF NOT EXISTS jobs (
     desired_education_level VARCHAR(255),
     start_date TIMESTAMP WITH TIME ZONE, -- May be null if start date is TBC
     match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
-    close_message TEXT, -- Message shown to candidates who are interested but not shortlisted when the posting is closed
-    closed BOOLEAN,
+    close_message TEXT, -- Message shown to candidates who are interested but not shortlisted when the posting is closed (deleted from DB)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

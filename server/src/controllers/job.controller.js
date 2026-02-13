@@ -10,14 +10,14 @@ import {
 export const createJob = async (req, res, next) => {
     try {
         const companyId = req.params.companyId;
-        const {job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message} = req.body;
+        const {job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message} = req.body;
 
         if (!job_title || !description)
             throw new AppError(400, "Job Title and Description are required.");
         else if (!postcode)
             throw new AppError(400, "Postcode for Job location is required.");
 
-        const job = await createJobService(companyId, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message);
+        const job = await createJobService(companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message);
         if (!job)
             throw new AppError(404, "Company not found.");
         else handleResponse(res, 201, "Job created successfully.", job);
@@ -66,14 +66,14 @@ export const getJobById = async (req, res, next) => {
 export const updateJob = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const {job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message} = req.body;
+        const {job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message} = req.body;
 
         if (!job_title || !description)
             throw new AppError(400, "Job Title and Description are required.");
         else if (!postcode)
             throw new AppError(400, "Postcode for Job location is required.");
 
-        const job = await updateJobService(id, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message);
+        const job = await updateJobService(id, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message);
         if (!job)
             throw new AppError(404, "Job not found.");
         else handleResponse(res, 200, "Job updated successfully.", job);

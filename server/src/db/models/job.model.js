@@ -3,7 +3,7 @@ import {AppError} from "../../middleware/error_handler.js";
 import {getCompanyInfoByIdService} from "./company_info.model.js";
 import validatePostcode from "../../utils/input_validation.util.js";
 
-export const createJobService = async (companyId, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message) => {
+export const createJobService = async (companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) => {
     const company = getCompanyInfoByIdService(companyId);
     if (!company)
         return null;
@@ -15,8 +15,8 @@ export const createJobService = async (companyId, job_title, postcode, descripti
     if (!validatePostcode(postcode))
         throw new AppError(400, "Invalid postcode format.");
 
-    const result = pool.query("INSERT INTO jobs (company_id, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-        [companyId, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message]);
+    const result = pool.query("INSERT INTO jobs (company_id, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
+        [companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message]);
     return result.rows[0];
 };
 
@@ -39,7 +39,7 @@ export const getJobByIdService = async (id) => {
     return result.rows[0];
 }
 
-export const updateJobService = async (id, job_title, postcode, description, salary, apprenticeship_level, desired_education_level, start_date, match_message) => {
+export const updateJobService = async (id, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) => {
     const job = getJobByIdService(id);
     if (!job)
         return null;
@@ -53,7 +53,8 @@ export const updateJobService = async (id, job_title, postcode, description, sal
             throw new AppError(400, "Invalid postcode format.");
     }
 
-    const result = pool.query("UPDATE jobs SET job_title=$1, postcode=$2, description=$3, salary=$4, apprenticeship_level=$5, desired_education_level=$6, start_date=$7, match_message=$8 WHERE id=$9 RETURNING *");
+    const result = pool.query("UPDATE jobs SET job_title=$1, postcode=$2, description=$3, salary=$4, field=$5, apprenticeship_level=$6, desired_education_level=$7, start_date=$8, match_message=$9, close_message=$10 WHERE id=$11 RETURNING *",
+        [job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message, id]);
     return result.rows[0];
 }
 
