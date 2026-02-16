@@ -1,8 +1,16 @@
 import express from "express";
+import {
+    getSavedUsersForJob,
+    getUserInterestedJobs,
+    getUserSavedJobs,
+    getUsersInterestedInJob,
+    shortlistUserForJob,
+    userInterestedInJob,
+    userSavesJob
+} from "../controllers/job_matching.controller.js";
 
-const router = express.router();
+const router = express.Router();
 
-router.get("/job/users", getAllJobMatches);
 router.get("/user/:userId/jobs/saved", getUserSavedJobs);
 router.get("/user/:userId/jobs/interested", getUserInterestedJobs);
 router.get("/job/:jobId/users/saved", getSavedUsersForJob);

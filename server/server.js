@@ -6,6 +6,7 @@ import userRoutes from "./src/routes/user.route.js";
 import candidatePreferencesRoutes from './src/routes/candidate_preferences.route.js';
 import educationRoutes from "./src/routes/education.route.js";
 import companyInfoRoutes from "./src/routes/company_info.route.js";
+import jobMatchingRoutes from "./src/routes/job_matching.route.js";
 import { initializeDatabase } from './src/db/config/db.config.js';
 
 dotenv.config();
@@ -18,10 +19,13 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use("/api", userRoutes);
-app.use("/api", candidatePreferencesRoutes);
-app.use("/api", educationRoutes);
-app.use("/api", companyInfoRoutes);
+const apiBase = "/api";
+
+app.use(apiBase, userRoutes);
+app.use(apiBase, candidatePreferencesRoutes);
+app.use(apiBase, educationRoutes);
+app.use(apiBase, companyInfoRoutes);
+app.use(apiBase, jobMatchingRoutes);
 
 // Error handling
 app.use(errorHandler);
