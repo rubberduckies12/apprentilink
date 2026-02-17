@@ -55,6 +55,9 @@ const getUserJobMatchingObject = async (userId, jobId) => {
 
 export const userSavesJobService = async (userId, jobId, saved) => {
     const userJobObj = await getUserJobMatchingObject(userId, jobId);
+    const user = await getUserByIdService(userId);
+    if (user.user_type !== 'CANDIDATE')
+        throw new AppError(400, "Only Candidates can save Jobs.");
 
     let result;
     if (userJobObj) { // If the user has already interacted with this job, update the existing 'users_interested' object
@@ -71,6 +74,9 @@ export const userSavesJobService = async (userId, jobId, saved) => {
 
 export const userInterestedInJobService = async (userId, jobId, interested) => {
     const userJobObj = await getUserJobMatchingObject(userId, jobId);
+    const user = await getUserByIdService(userId);
+    if (user.user_type !== 'CANDIDATE')
+        throw new AppError(400, "Only Candidates can be interested in Jobs.");
 
     let result;
     if (userJobObj) { // If the user has already interacted with this job, update the existing 'users_interested' object
@@ -91,6 +97,9 @@ export const shortlistUserForJobService = async (userId, jobId) => {
     // Can only shortlist users who have marked themselves as interested
     if (!userJobObj || !userJobObj.user_interested)
         throw new AppError(400, "User is not interested in this Job.");
+
+    if (userJobObj && userJobObj.shortlisted)
+        throw new AppError(400, "User is already shortlisted for this Job.");
 
     const job = await getJobByIdService(jobId);
 

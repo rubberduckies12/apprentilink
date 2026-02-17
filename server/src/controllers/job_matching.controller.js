@@ -64,13 +64,21 @@ export const userSavesJob = async (req, res, next) => {
     try {
         const userId = req.params.userId;
         const jobId = req.params.jobId;
-        const saved = req.body; // true/false to save/unsave the job
+        const {saved} = req.body; // true/false to save/unsave the job
+
+        if (saved === null || saved === undefined)
+            throw new AppError(400, "Save status is required.");
+
+        let message;
+        if (saved)
+            message = "Job saved by User successfully.";
+        else message = "Job unsaved by User successfully.";
 
         // A 'users_interested' object should be returned
         const userJobObj = await userSavesJobService(userId, jobId, saved);
         if (!userJobObj)
             throw new AppError(500, "Unexpected error.");
-        else handleResponse(res, 200, "Job saved by User successfully.", userJobObj);
+        else handleResponse(res, 200, message, userJobObj);
     }
     catch (err) {
         next(err);
@@ -81,12 +89,20 @@ export const userInterestedInJob = async (req, res, next) => {
     try {
         const userId = req.params.userId;
         const jobId = req.params.jobId;
-        const interested = req.body;
+        const {interested} = req.body;
+
+        if (interested === null || interested === undefined)
+            throw new AppError(400, "Interested status is required.");
+
+        let message;
+        if (interested)
+            message = "User successfully marked as interested in Job.";
+        else message = "User successfully marked as not interested in Job.";
 
         const userJobObj = await userInterestedInJobService(userId, jobId, interested);
         if (!userJobObj)
             throw new AppError(500, "Unexpected error.");
-        else handleResponse(res, 200, "User successfully marked as interested in Job.", userJobObj);
+        else handleResponse(res, 200, message, userJobObj);
     }
     catch (err) {
         next(err);

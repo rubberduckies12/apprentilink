@@ -5,8 +5,8 @@ const errorHandler = (err, req, res, next) => {
     const statusCode = err.statusCode || 500; // Thrown errors should have a status code attached
 
     // Log unexpected error stacks to the console, if in development
-    if (process.env.NODE_ENV === 'development' && !statusCode)
-        console.log(err.stack);
+    if (process.env.NODE_ENV === 'development' && statusCode === 500)
+        console.error(err.stack);
 
     res.status(statusCode).json({
         status: statusCode,

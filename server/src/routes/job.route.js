@@ -8,7 +8,7 @@ import {
     updateJob
 } from "../controllers/job.controller.js";
 
-const router = express.router();
+const router = express.Router();
 
 router.post("/job/:companyId", createJob);
 router.get("/job", getAllJobs);

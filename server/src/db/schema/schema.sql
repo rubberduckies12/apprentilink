@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS candidate_preferences (
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- A candidate has one of these objects linked to it. When the user is deleted, their preferences will be.
     preferred_industry VARCHAR(255),
     preferred_field VARCHAR(255),
+    preferred_role VARCHAR(255),
     postcode VARCHAR(20),
     distance_km INTEGER, -- Max distance from the user's postcode that will be recommended
-    preferred_role VARCHAR(255),
     start_date TIMESTAMP WITH TIME ZONE,
     apprenticeship_level INTEGER,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
