@@ -8,6 +8,7 @@ import educationRoutes from "./src/routes/education.route.js";
 import companyInfoRoutes from "./src/routes/company_info.route.js";
 import jobRoutes from "./src/routes/job.route.js";
 import jobMatchingRoutes from "./src/routes/job_matching.route.js";
+import genericRoutes from "./src/routes/generic.route.js";
 import { initializeDatabase } from './src/db/config/db.config.js';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(apiBase, educationRoutes);
 app.use(apiBase, companyInfoRoutes);
 app.use(apiBase, jobRoutes);
 app.use(apiBase, jobMatchingRoutes);
+app.use(apiBase, genericRoutes);
 
 // Error handling
 app.use(errorHandler);

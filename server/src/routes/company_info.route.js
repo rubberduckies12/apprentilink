@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-// CRUD API endpoints for Candidate Preferences objects
+// CRUD API endpoints for Company Info objects
 router.post("/company/:userId", createCompanyInfo);
 router.get("/company/:id", getCompanyInfoById);
 router.get("/company/user/:userId", getCompanyInfoByUserId)

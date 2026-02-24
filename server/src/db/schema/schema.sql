@@ -158,11 +158,8 @@ CREATE TABLE IF NOT EXISTS match_records (
 
 -- Store stats for 'all time' as well as the current year (Could be expanded later to document every year)
 CREATE TABLE IF NOT EXISTS app_stats (
-    user_count_all_time INTEGER DEFAULT 0,
-    user_count_candidates INTEGER DEFAULT 0,
-    user_count_companies INTEGER DEFAULT 0,
+    candidates_count_all_time INTEGER DEFAULT 0,
+    companies_count_all_time INTEGER DEFAULT 0,
     matches_made_all_time INTEGER DEFAULT 0,
-    matches_made INTEGER DEFAULT 0,
-    jobs_posted_all_time INTEGER DEFAULT 0,
-    jobs_posted INTEGER DEFAULT 0
+    jobs_posted_all_time INTEGER DEFAULT 0
 );
