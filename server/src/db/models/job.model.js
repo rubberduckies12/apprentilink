@@ -2,7 +2,6 @@ import pool from "../../db/config/db.config.js";
 import {AppError} from "../../middleware/error_handler.js";
 import {getCompanyInfoByIdService} from "./company_info.model.js";
 import validatePostcode from "../../utils/input_validation.util.js";
-import {incrementAllTimeJobsCount} from "./app_stats.model.js";
 
 export const createJobService = async (companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) => {
     const company = await getCompanyInfoByIdService(companyId);
@@ -16,12 +15,23 @@ export const createJobService = async (companyId, job_title, postcode, descripti
     if (!validatePostcode(postcode))
         throw new AppError(400, "Invalid postcode format.");
 
-    const result = await pool.query("INSERT INTO jobs (company_id, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-        [companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message]);
+    const client = pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query("INSERT INTO jobs (company_id, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
+            [companyId, job_title, postcode, description, salary, field, apprenticeship_level, desired_education_level, start_date, match_message, close_message]);
 
-    if (result.rows[0])
-        await incrementAllTimeJobsCount();
-    return result.rows[0];
+        await client.query("UPDATE app_stats SET jobs_posted_all_time = jobs_posted_all_time + 1");
+        await client.query("COMMIT");
+        return result.rows[0];
+    }
+    catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    }
+    finally {
+        await client.release();
+    }
 };
 
 export const getAllJobsService = async () => {

@@ -1,7 +1,6 @@
 import pool from "../../db/config/db.config.js";
 import {getUserByIdService} from "./user.model.js";
 import {AppError} from "../../middleware/error_handler.js";
-import {incrementAllTimeCompaniesCount} from "./app_stats.model.js";
 
 
 export const createCompanyInfoService = async (userId, industry, contact_email, contact_phone, logo_url) => {
@@ -15,12 +14,23 @@ export const createCompanyInfoService = async (userId, industry, contact_email, 
     if (existingInfo)
         throw new AppError(400, "User already has Company Info. Cannot create.");
 
-    const result = await pool.query("INSERT INTO company_info (user_id, industry, contact_email, contact_phone, logo_url) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [userId, industry, contact_email, contact_phone, logo_url]);
+    const client = pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query("INSERT INTO company_info (user_id, industry, contact_email, contact_phone, logo_url) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+             [userId, industry, contact_email, contact_phone, logo_url]);
 
-    if (result.rows[0])
-        await incrementAllTimeCompaniesCount();
-    return result.rows[0];
+        await client.query("UPDATE app_stats SET companies_count_all_time = companies_count_all_time + 1");
+        await client.query("COMMIT");
+        return result.rows[0];
+    }
+    catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    }
+    finally {
+        await client.release();
+    }
 };
 
 export const getCompanyInfoByIdService = async (id) => {

@@ -2,7 +2,6 @@ import pool from "../../db/config/db.config.js";
 import {getUserByIdService} from "./user.model.js";
 import {AppError} from "../../middleware/error_handler.js";
 import validatePostcode from "../../utils/input_validation.util.js";
-import {incrementAllTimeCandidatesCount} from "./app_stats.model.js";
 
 
 export const createCandidatePreferencesService = async (userId, industry, postcode, distance_km, preferred_role, start_date, apprenticeship_level) => {
@@ -19,12 +18,24 @@ export const createCandidatePreferencesService = async (userId, industry, postco
     if (postcode && !validatePostcode(postcode)) // Only validate postcode if it is present (postcode is optional, so null is allowed)
         throw new AppError(400, "Invalid postcode format.");
 
-    const result = await pool.query("INSERT INTO candidate_preferences (user_id, industry, postcode, distance_km, preferred_role, start_date, apprenticeship_level) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-        [userId, industry, postcode, distance_km, preferred_role, start_date, apprenticeship_level]);
+    const client = pool.connect();
+    try {
+        await client.query("BEGIN");
 
-    if (result.rows[0])
-        await incrementAllTimeCandidatesCount();
-    return result.rows[0];
+        const result = await client.query("INSERT INTO candidate_preferences (user_id, industry, postcode, distance_km, preferred_role, start_date, apprenticeship_level) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [userId, industry, postcode, distance_km, preferred_role, start_date, apprenticeship_level]);
+
+        await client.query("UPDATE app_stats SET candidates_count_all_time = candidates_count_all_time + 1");
+        await client.query("COMMIT");
+        return result.rows[0];
+    }
+    catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    }
+    finally {
+        await client.release();
+    }
 };
 
 export const getCandidatePreferencesByUserIdService = async (userId) => {

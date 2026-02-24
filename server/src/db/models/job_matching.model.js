@@ -2,7 +2,6 @@ import pool from "../config/db.config.js";
 import {AppError} from "../../middleware/error_handler.js";
 import {getUserByIdService} from "./user.model.js";
 import {getJobByIdService} from "./job.model.js";
-import {incrementAllTimeMatchesCount} from "./app_stats.model.js";
 
 export const getUserSavedJobsService = async (userId) => {
     const user = await getUserByIdService(userId);
@@ -106,19 +105,29 @@ export const shortlistUserForJobService = async (userId, jobId) => {
 
     // TODO - Must check the account which has activated this endpoint is of type COMPANY or ADMIN, to avoid users shortlisting themselves
 
-    // TODO - These two queries should be done in 1 transaction, to ensure that a user cannot be matched without a record being made
-    const result = await pool.query("UPDATE users_interested SET shortlisted = true, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1 AND job_id = $2 RETURNING *",
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        const result = await client.query("UPDATE users_interested SET shortlisted = true, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1 AND job_id = $2 RETURNING *",
             [userId, jobId]);
 
-    if (result.rows[0]) {
         // When a company shortlists a user, a match_record object must be created for GDPR purposes
-        await pool.query("INSERT INTO match_records (user_id, company_id, job_title) VALUES ($1, $2, $3)",
+        await client.query("INSERT INTO match_records (user_id, company_id, job_title) VALUES ($1, $2, $3)",
             [userId, job.company_id, job.job_title]);
 
-        await incrementAllTimeMatchesCount();
+        // Track global statistics
+        await client.query("UPDATE app_stats SET matches_made_all_time = matches_made_all_time + 1");
 
+        await client.query('COMMIT');
         return result.rows[0];
     }
-    else return null;
+    catch (err) {
+        await client.query('ROLLBACK');
+        throw err; // Re-throw error to be handled by middleware
+    }
+    finally {
+        await client.release();
+    }
 }
 
