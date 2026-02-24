@@ -8,6 +8,16 @@ export const getAllUsersService = async () => {
     return result.rows;
 };
 
+export const getAllCandidatesService = async () => {
+    const result = await pool.query("SELECT * FROM users WHERE user_type = 'CANDIDATE' ORDER BY id");
+    return result.rows;
+}
+
+export const getAllCompaniesService = async () => {
+    const result = await pool.query("SELECT * FROM users WHERE user_type = 'COMPANY' ORDER BY id");
+    return result.rows;
+}
+
 export const getUserByIdService = async (id) => {
     const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
     return result.rows[0];

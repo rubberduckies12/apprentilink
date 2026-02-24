@@ -4,7 +4,7 @@ import {
     getAllUsersService,
     getUserByIdService,
     updateUserService,
-    changePasswordService
+    changePasswordService, getAllCompaniesService, getAllCandidatesService
 } from "../db/models/user.model.js";
 import handleResponse from "../utils/response_handler.js";
 import {AppError} from "../middleware/error_handler.js";
@@ -34,6 +34,26 @@ export const getAllUsers = async (req, res, next) => {
     try {
         const users = await getAllUsersService();
         handleResponse(res, 200, "Users fetched successfully.", users);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const getAllCandidates = async (req, res, next) => {
+    try {
+        const users = await getAllCandidatesService();
+        handleResponse(res, 200, "Candidates fetched successfully.", users);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const getAllCompanies = async (req, res, next) => {
+    try {
+        const users = await getAllCompaniesService();
+        handleResponse(res, 200, "Companies fetched successfully.", users);
     }
     catch (err) {
         next(err);
