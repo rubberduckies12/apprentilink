@@ -113,7 +113,8 @@ CREATE TABLE IF NOT EXISTS jobs (
     match_message TEXT, -- Message shown to candidates who are shortlisted (perhaps via automated email)
     close_message TEXT, -- Message shown to candidates who are interested but not shortlisted when the posting is closed (deleted from DB)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(company_id, job_title) -- Same company cannot post a job with the same title
 );
 
 -- Jobs can have 'ideal skills' and 'ideal education subjects' to recommend to users with a matching profile
@@ -163,3 +164,4 @@ CREATE TABLE IF NOT EXISTS app_stats (
     matches_made_all_time INTEGER DEFAULT 0,
     jobs_posted_all_time INTEGER DEFAULT 0
 );
+INSERT INTO app_stats DEFAULT VALUES; -- Make sure to initialize the global stats

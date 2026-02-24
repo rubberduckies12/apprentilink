@@ -1,6 +1,7 @@
 import pool from "../../db/config/db.config.js";
 import {getUserByIdService} from "./user.model.js";
 import {AppError} from "../../middleware/error_handler.js";
+import {incrementAllTimeCompaniesCount} from "./app_stats.model.js";
 
 
 export const createCompanyInfoService = async (userId, industry, contact_email, contact_phone, logo_url) => {
@@ -16,6 +17,9 @@ export const createCompanyInfoService = async (userId, industry, contact_email, 
 
     const result = await pool.query("INSERT INTO company_info (user_id, industry, contact_email, contact_phone, logo_url) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         [userId, industry, contact_email, contact_phone, logo_url]);
+
+    if (result.rows[0])
+        await incrementAllTimeCompaniesCount();
     return result.rows[0];
 };
 
@@ -44,15 +48,5 @@ export const updateCompanyInfoService = async (userId, industry, contact_email, 
 
     const result = await pool.query("UPDATE company_info SET industry=$1, contact_email=$2, contact_phone=$3, logo_url=$4, updated_at=CURRENT_TIMESTAMP WHERE user_id=$5 RETURNING *",
         [industry, contact_email, contact_phone, logo_url, userId]);
-    return result.rows[0];
-};
-
-export const deleteCompanyInfoService = async (userId) => {
-    const user = await getUserByIdService(userId);
-    if (!user)
-        throw new AppError(404, "User not found.");
-
-    const result = await pool.query("DELETE FROM company_info WHERE user_id = $1 RETURNING *",
-        [userId]);
     return result.rows[0];
 };

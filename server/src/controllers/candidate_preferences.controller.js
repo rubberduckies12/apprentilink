@@ -1,6 +1,6 @@
 import handleResponse from "../utils/response_handler.js";
 import {
-    createCandidatePreferencesService, deleteCandidatePreferencesService,
+    createCandidatePreferencesService,
     getCandidatePreferencesByUserIdService, updateCandidatePreferencesService
 } from "../db/models/candidate_preferences.model.js";
 import {AppError} from "../middleware/error_handler.js";

@@ -13,6 +13,5 @@ const router = express.Router();
 router.post("/candidate/:userId", createCandidatePreferences);
 router.get("/candidate/:userId", getCandidatePreferences);
 router.put("/candidate/:userId", updateCandidatePreferences);
-router.delete("/candidate/:userId", deleteCandidatePreferences);
 
 export default router;

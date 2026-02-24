@@ -2,7 +2,7 @@ import handleResponse from "../utils/response_handler.js";
 import {AppError} from "../middleware/error_handler.js";
 import {
     createCompanyInfoService,
-    deleteCompanyInfoService, getCompanyInfoByIdService,
+    getCompanyInfoByIdService,
     getCompanyInfoByUserIdService,
     updateCompanyInfoService
 } from "../db/models/company_info.model.js";

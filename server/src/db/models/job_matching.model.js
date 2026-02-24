@@ -2,6 +2,7 @@ import pool from "../config/db.config.js";
 import {AppError} from "../../middleware/error_handler.js";
 import {getUserByIdService} from "./user.model.js";
 import {getJobByIdService} from "./job.model.js";
+import {incrementAllTimeMatchesCount} from "./app_stats.model.js";
 
 export const getUserSavedJobsService = async (userId) => {
     const user = await getUserByIdService(userId);
@@ -109,10 +110,12 @@ export const shortlistUserForJobService = async (userId, jobId) => {
     const result = await pool.query("UPDATE users_interested SET shortlisted = true, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1 AND job_id = $2 RETURNING *",
             [userId, jobId]);
 
-    if (result.rows.length > 0) {
+    if (result.rows[0]) {
         // When a company shortlists a user, a match_record object must be created for GDPR purposes
         await pool.query("INSERT INTO match_records (user_id, company_id, job_title) VALUES ($1, $2, $3)",
             [userId, job.company_id, job.job_title]);
+
+        await incrementAllTimeMatchesCount();
 
         return result.rows[0];
     }

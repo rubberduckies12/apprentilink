@@ -15,6 +15,5 @@ router.post("/company/:userId", createCompanyInfo);
 router.get("/company/:id", getCompanyInfoById);
 router.get("/company/user/:userId", getCompanyInfoByUserId)
 router.put("/company/:userId", updateCompanyInfo);
-router.delete("/company/:userId", deleteCompanyInfo);
 
 export default router;
