@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/Logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apprentalink</title>
+  </head>
+  <body>
+    <!-- Top Banner -->
+    <header class="top-banner">
+        <div class="banner-left">
+            <button class="icon-btn">Company Profile</button>
+            <button class="nav-link">Jobs Listed</button>
+        </div>
+        <div class="banner-right">
+            <button id="LogoutButton" class="logout-btn">Logout</button>
+        </div>
+    </header>
+    <!-- Main Dashboard -->
+    <main class="dashboard-content">
+        
+        <div class="company-header">
+            <h2>Your Job Postings:</h2>
+            <!-- Match the "Add New Job" box style from your drawing -->
+            <button id="AddJobBtn" class="add-job-btn">
+                <span class="plus-icon">🗂️</span> Add New Job
+            </button>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-container">
+            <div class="search-wrapper">
+                <input type="text" placeholder="Search" id="JobSearch">
+            </div>
+            <div class="filter-icons">
+                <button class="icon-only-btn">Filter</button>
+                <button class="icon-only-btn">Sort</button>
+            </div>
+        </div>
+
+        <!-- Job Flex Container -->
+        <section class="jobs-flex-wrapper">
+            <div class="jobs-flex-container">
+                <!-- 8 Placeholder Cards to match your drawing -->
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+                <div class="job-card"></div>
+            </div>
+            <script type="module" src="/src/main.ts"></script>
+        </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(0, 9, 88, 0.87);
+  background-color: #ecebff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+#app {
+  h1 {
+    font-size: 5em;
+    line-height: 0.5;
+  }
+  h2 {
+    font-size: 40px;
+    line-height: 0.5;
+  }
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 100px;
+  margin-bottom: 10%;
+}
+
+button, #RegisterButton, #LoginButton {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #00013f;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+#VCode {
+  background-color: #d6d5e7;
+  color: rgba(6, 9, 34, 0.87);
+  border: 2px solid #00013f;
+  padding: 10px;
+  border-radius: 30px;
+  align-items: center;
+  width: 300px;
+  height: 30px;
+}
+
+#SubmitButton, #LoginSubmitButton {
+  background-color: #272b47;
+  color: #ffffff;
+  align-items: flex-start;
+  width: 150px;
+  height: 40px;
+  margin-left: 80px;
+  border-radius: 20px;
+}
+
+#Login {
+  h1 {
+    padding-left: 5%;
+    padding-bottom: 15%;
+  }
+  h2 {
+    padding-right: 45%;
+    font-weight: 700;
+  }
+  #Username, #Password {
+    background-color: #d6d5e7;
+    color: rgba(6, 10, 48, 0.87);
+    border: 2px solid #00013f;
+    padding: 10px;
+    border-radius: 20px;
+    align-items: center;
+    width: 300px;
+    height: 30px;
+  }
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  margin-bottom: 10%;
+}
+
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
+
+/* STYLE FOR STUDENT HOME */
+
+/* Banner Layout */
+.top-banner {
+    width: 100%;
+    height: 60px;
+    background-color: #272b47;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.banner-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Dashboard Container */
+.dashboard-content {
+    margin-top: 80px; /* Space for the fixed banner */
+    padding: 2rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.action-bar {
+    margin-bottom: 2rem;
+    display: flex;
+}
+
+/* Reusable Buttons */
+.primary-btn {
+    background-color: #272b47;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-btn {
+    background-color: transparent;
+    border: 1px solid #ffffff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+}
+
+/* Carousel Styles */
+.carousel-section {
+    margin-bottom: 4rem;
+}
+
+.carousel-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #272b47;
+}
+
+.carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.carousel::-webkit-scrollbar {
+    height: 8px;
+}
+.carousel::-webkit-scrollbar-thumb {
+    background: #272b47;
+    border-radius: 10px;
+}
+
+/* Job Cards */
+.job-card {
+    min-width: 250px;
+    height: 150px;
+    background-color: white;
+    border: 2px solid #00013f;
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.job-card h4 {
+    margin: 0 0 10px 0;
+    color: #272b47;
+}
+
+/*STYLIING FOR COMPANY HOME*/
+/* COMPANY HOME FLEX LAYOUT */
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.add-job-btn {
+    background-color: white;
+    color: black;
+    border: 3px solid black;
+    border-radius: 15px;
+    font-weight: 800;
+    font-size: 1.8rem;
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-wrapper input {
+    width: 450px;
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: 2px solid black;
+    font-size: 1.5rem;
+    background-color: white;
+}
+
+/* The Flex Container for the cards */
+.jobs-flex-container {
+    display: flex;
+    flex-wrap: wrap; /* This allows cards to wrap to the next row */
+    gap: 30px;
+    justify-content: flex-start;
+    padding-right: 40px; /* Space for the scrollbar on the right */
+}
+
+/* Card sizing to ensure 4 per row */
+.jobs-flex-container .job-card {
+    /* (100% / 4) minus the gaps */
+    flex: 0 1 calc(25% - 30px); 
+    min-width: 220px;
+    height: 180px;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 25px;
+}
+
+.search-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 2rem;
+}
+
+.icon-only-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
